@@ -6,9 +6,8 @@ import {
   ContentState,
   Entity,
   genKey,
-  SelectionState,
 } from 'draft-js';
-import {List, OrderedMap, OrderedSet, Repeat, Seq} from 'immutable';
+import {List, OrderedSet, Repeat, Seq} from 'immutable';
 import {BLOCK_TYPE, ENTITY_TYPE, INLINE_STYLE} from './Constants';
 import {NODE_TYPE_ELEMENT, NODE_TYPE_TEXT} from 'synthetic-dom';
 
@@ -22,7 +21,6 @@ type DOMElement = SyntheticElement | Element;
 
 type CharacterMetaSeq = Seq<CharacterMetadata>;
 type StyleSet = OrderedSet;
-type BlockMap = OrderedMap<string, ContentBlock>;
 
 type TextFragment = {
   text: string;
@@ -346,33 +344,7 @@ function addStyleFromTagName(styleSet: StyleSet, tagName: string): StyleSet {
   return styleSet;
 }
 
-function createBlockMap(blocks: Array<ContentBlock>): BlockMap {
-  return OrderedMap(
-    blocks.map(
-      (block) => [block.getKey(), block]
-    )
-  );
-}
-
-function createEmptySelectionState(key: string): SelectionState {
-  return new SelectionState({
-    anchorKey: key,
-    anchorOffset: 0,
-    focusKey: key,
-    focusOffset: 0,
-    isBackward: false,
-    hasFocus: false,
-  });
-}
-
-export default function stateFromElement(
-  element: DOMElement,
-): ContentState {
+export default function stateFromElement(element: DOMElement): ContentState {
   let blocks = new BlockGenerator().process(element);
-  let selectionState = createEmptySelectionState(blocks[0].getKey());
-  return new ContentState({
-    blockMap: createBlockMap(blocks),
-    selectionBefore: selectionState,
-    selectionAfter: selectionState,
-  });
+  return ContentState.createFromBlockArray(blocks);
 }
