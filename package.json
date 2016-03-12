@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/sstur/draft-js-import-element#readme",
   "dependencies": {
+    "draft-js-tools": "^0.1.0",
     "synthetic-dom": "^0.1.0"
   },
   "devDependencies": {
