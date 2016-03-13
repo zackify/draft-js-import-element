@@ -198,15 +198,15 @@ class BlockGenerator {
     }
     let block = this.blockStack.slice(-1)[0];
     let style = block.styleStack.slice(-1)[0];
-    let newStyle = addStyleFromTagName(style, tagName);
-    block.styleStack.push(newStyle);
-    let entityKey = null;
+    let entityKey = block.entityStack.slice(-1)[0];
+    style = addStyleFromTagName(style, tagName);
     if (tagName === 'a') {
       let url = element.getAttribute('href');
       if (url != null) {
         entityKey = Entity.create(ENTITY_TYPE.LINK, 'MUTABLE', {url});
       }
     }
+    block.styleStack.push(style);
     block.entityStack.push(entityKey);
     if (element.childNodes != null) {
       Array.from(element.childNodes).forEach(this.processNode, this);
