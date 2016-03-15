@@ -56,7 +56,7 @@ const LINE_BREAKS = /(\r\n|\r|\n)/g;
 
 // Map element attributes to entity data.
 const ELEM_ATTR_MAP = {
-  a: {href: 'url', rel: 'rel', target: 'target'},
+  a: {href: 'url', rel: 'rel', target: 'target', title: 'title'},
 };
 
 // Functions to convert elements to entities.
