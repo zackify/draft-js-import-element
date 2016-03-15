@@ -18,6 +18,14 @@
 {"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"/"}}},"blocks":[{"key":"8r91j","text":"a","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":1,"key":0}]}]}
 <p><a href="/">a</a></p>
 
+# Entity missing required attribute
+{"entityMap":{},"blocks":[{"key":"3n6ro","text":"a","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
+<p><a id="foo">a</a></p>
+
+# Entity with supported and unsupported attributes
+{"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"/","rel":"foo","target":"_blank"}}},"blocks":[{"key":"8r91j","text":"a","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":1,"key":0}]}]}
+<p><a href="/" rel="foo" target="_blank" id="bar" baz="baz">a</a></p>
+
 # Entity with inline style
 {"entityMap":{"0":{"type":"LINK","mutability":"MUTABLE","data":{"url":"/"}}},"blocks":[{"key":"8r91j","text":"a","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":0,"length":1,"style":"ITALIC"}],"entityRanges":[{"offset":0,"length":1,"key":0}]}]}
 <p><a href="/"><em>a</em></a></p>

@@ -54,6 +54,32 @@ const EMPTY_BLOCK = new ContentBlock({
 
 const LINE_BREAKS = /(\r\n|\r|\n)/g;
 
+// Map element attributes to entity data.
+const ELEM_ATTR_MAP = {
+  a: {href: 'url', rel: 'rel', target: 'target'},
+};
+
+// Functions to convert elements to entities.
+const ELEM_TO_ENTITY = {
+  a(tagName: string, element: DOMElement): ?string {
+    let data = {};
+    if (ELEM_ATTR_MAP.hasOwnProperty(tagName)) {
+      let attrMap = ELEM_ATTR_MAP[tagName];
+      for (let attr of Object.keys(attrMap)) {
+        let dataKey = attrMap[attr];
+        let dataValue = element.getAttribute(attr);
+        if (dataValue != null) {
+          data[dataKey] = dataValue;
+        }
+      }
+    }
+    // Don't add `<a>` elmeents with no href.
+    if (data.url != null) {
+      return Entity.create(ENTITY_TYPE.LINK, 'MUTABLE', data);
+    }
+  },
+};
+
 // TODO: Move this out to a module.
 const INLINE_ELEMENTS = {
   a: 1, abbr: 1, area: 1, audio: 1, b: 1, bdi: 1, bdo: 1, br: 1, button: 1,
@@ -200,11 +226,9 @@ class BlockGenerator {
     let style = block.styleStack.slice(-1)[0];
     let entityKey = block.entityStack.slice(-1)[0];
     style = addStyleFromTagName(style, tagName);
-    if (tagName === 'a') {
-      let url = element.getAttribute('href');
-      if (url != null) {
-        entityKey = Entity.create(ENTITY_TYPE.LINK, 'MUTABLE', {url});
-      }
+    if (ELEM_TO_ENTITY.hasOwnProperty(tagName)) {
+      // If the to-entity function returns nothing, use the existing entity.
+      entityKey = ELEM_TO_ENTITY[tagName](tagName, element) || entityKey;
     }
     block.styleStack.push(style);
     block.entityStack.push(entityKey);
