@@ -63,7 +63,7 @@ function parseHTML(html: string): Element {
 function removeBlockKeys(content: Object): Object {
   let newContent = {...content};
   newContent.blocks = content.blocks.map((block) => {
-    let {key, ...other} = block;
+    let {key, ...other} = block; // eslint-disable-line no-unused-vars
     return other;
   });
   return newContent;
