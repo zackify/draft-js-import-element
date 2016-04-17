@@ -8,7 +8,7 @@ import {
   genKey,
 } from 'draft-js';
 import {List, OrderedSet, Repeat, Seq} from 'immutable';
-import {BLOCK_TYPE, ENTITY_TYPE, INLINE_STYLE} from 'draft-js-tools';
+import {BLOCK_TYPE, ENTITY_TYPE, INLINE_STYLE} from 'draft-js-utils';
 import {NODE_TYPE_ELEMENT, NODE_TYPE_TEXT} from 'synthetic-dom';
 
 import type {
