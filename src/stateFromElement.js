@@ -361,28 +361,25 @@ function addStyleFromTagName(styleSet: StyleSet, tagName: string): StyleSet {
   switch (tagName) {
     case 'b':
     case 'strong': {
-      styleSet = styleSet.add(INLINE_STYLE.BOLD);
-      break;
+      return styleSet.add(INLINE_STYLE.BOLD);
     }
     case 'i':
     case 'em': {
-      styleSet = styleSet.add(INLINE_STYLE.ITALIC);
-      break;
+      return styleSet.add(INLINE_STYLE.ITALIC);
     }
     case 'ins': {
-      styleSet = styleSet.add(INLINE_STYLE.UNDERLINE);
-      break;
+      return styleSet.add(INLINE_STYLE.UNDERLINE);
     }
     case 'code': {
-      styleSet = styleSet.add(INLINE_STYLE.CODE);
-      break;
+      return styleSet.add(INLINE_STYLE.CODE);
     }
     case 'del': {
-      styleSet = styleSet.add(INLINE_STYLE.STRIKETHROUGH);
-      break;
+      return styleSet.add(INLINE_STYLE.STRIKETHROUGH);
+    }
+    default: {
+      return styleSet;
     }
   }
-  return styleSet;
 }
 
 export default function stateFromElement(element: DOMElement): ContentState {
