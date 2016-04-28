@@ -113,8 +113,10 @@ class BlockGenerator {
   blockStack: Array<ParsedBlock>;
   blockList: Array<ParsedBlock>;
   depth: number;
+  options: Object;
 
-  constructor() {
+  constructor(options) {
+    this.options = options || {};
     // This represents the hierarchy as we traverse nested elements; for
     // example [body, ul, li] where we must know li's parent type (ul or ol).
     this.blockStack = [];
@@ -241,7 +243,7 @@ class BlockGenerator {
     let block = this.blockStack.slice(-1)[0];
     let style = block.styleStack.slice(-1)[0];
     let entityKey = block.entityStack.slice(-1)[0];
-    style = addStyleFromTagName(style, tagName);
+    style = addStyleFromTagName(style, tagName, this.options.elementStyles);
     if (ELEM_TO_ENTITY.hasOwnProperty(tagName)) {
       // If the to-entity function returns nothing, use the existing entity.
       entityKey = ELEM_TO_ENTITY[tagName](tagName, element) || entityKey;
@@ -357,7 +359,7 @@ function concatFragments(fragments: Array<TextFragment>): TextFragment {
 }
 
 
-function addStyleFromTagName(styleSet: StyleSet, tagName: string): StyleSet {
+function addStyleFromTagName(styleSet: StyleSet, tagName: string, elementStyles?: Object): StyleSet {
   switch (tagName) {
     case 'b':
     case 'strong': {
@@ -377,12 +379,17 @@ function addStyleFromTagName(styleSet: StyleSet, tagName: string): StyleSet {
       return styleSet.add(INLINE_STYLE.STRIKETHROUGH);
     }
     default: {
+      // User can provide custom styles
+      if (elementStyles && elementStyles[tagName]) {
+        return styleSet.add(elementStyles[tagName]);
+      }
+
       return styleSet;
     }
   }
 }
 
-export default function stateFromElement(element: DOMElement): ContentState {
-  let blocks = new BlockGenerator().process(element);
+export default function stateFromElement(element: DOMElement, options?: Object): ContentState {
+  let blocks = new BlockGenerator(options).process(element);
   return ContentState.createFromBlockArray(blocks);
 }

@@ -30,13 +30,29 @@ let testCases = testCasesRaw.slice(1).trim().split(SEP).map((text) => {
 });
 
 describe('stateFromElement', () => {
-  let textNode = new TextNode('Hello World');
-  let element = new ElementNode('div', [], [textNode]);
   it('should create content state', () => {
+    let textNode = new TextNode('Hello World');
+    let element = new ElementNode('div', [], [textNode]);
     let contentState = stateFromElement(element);
     let rawContentState = removeBlockKeys(convertToRaw(contentState));
     expect(rawContentState).toEqual(
       {entityMap: {}, blocks: [{text: 'Hello World', type: 'unstyled', depth: 0, inlineStyleRanges: [], entityRanges: []}]}
+    );
+  });
+
+  it('supports custom element styles option', () => {
+    let textNode = new TextNode('Superscript');
+    let element = new ElementNode('sup', [], [textNode]);
+    let wrapperElement = new ElementNode('div', [], [element]);
+    let options = {
+      elementStyles: {
+        sup: 'SUPERSCRIPT',
+      },
+    };
+    let contentState = stateFromElement(wrapperElement, options);
+    let rawContentState = removeBlockKeys(convertToRaw(contentState));
+    expect(rawContentState).toEqual(
+      {entityMap: {}, blocks: [{text: 'Superscript', type: 'unstyled', depth: 0, inlineStyleRanges: [{offset: 0, length: 11, style: 'SUPERSCRIPT'}], entityRanges: []}]}
     );
   });
 });
