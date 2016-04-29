@@ -305,7 +305,7 @@ function trimTrailingSpace(text: string, characterMeta: CharacterMetaSeq): TextF
 }
 
 function collapseWhiteSpace(text: string, characterMeta: CharacterMetaSeq): TextFragment {
-  text = text.replace(/[ \t\r\n]/g, ' ');
+  text = text.replace(/[ \t\n]/g, ' ');
   ({text, characterMeta} = trimLeadingSpace(text, characterMeta));
   ({text, characterMeta} = trimTrailingSpace(text, characterMeta));
   let i = text.length;
