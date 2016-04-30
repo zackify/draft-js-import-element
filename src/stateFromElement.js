@@ -54,6 +54,11 @@ const EMPTY_BLOCK = new ContentBlock({
 });
 
 const LINE_BREAKS = /(\r\n|\r|\n)/g;
+// We use `\r` because that character is always stripped from source (normalized
+// to `\n`), so it's safe to assume it will only appear in the text content when
+// we put it there as a placeholder.
+const SOFT_BREAK_PLACEHOLDER = '\r';
+const ZERO_WIDTH_SPACE = '\u200B';
 
 // Map element attributes to entity data.
 const ELEM_ATTR_MAP = {
@@ -74,7 +79,7 @@ const ELEM_TO_ENTITY = {
         }
       }
     }
-    // Don't add `<a>` elmeents with no href.
+    // Don't add `<a>` elements with no href.
     if (data.url != null) {
       return Entity.create(ENTITY_TYPE.LINK, 'MUTABLE', data);
     }
@@ -94,7 +99,7 @@ const INLINE_ELEMENTS = {
 };
 
 // These elements are special because they cannot contain text as a direct
-// child (or cannot contain childNodes at all).
+// child (some cannot contain childNodes at all).
 const SPECIAL_ELEMENTS = {
   area: 1, base: 1, br: 1, col: 1, colgroup: 1, command: 1, dl: 1, embed: 1,
   head: 1, hgroup: 1, hr: 1, iframe: 1, img: 1, input: 1, keygen: 1, link: 1,
@@ -124,13 +129,22 @@ class BlockGenerator {
     let contentBlocks = [];
     this.blockList.forEach((block) => {
       let {text, characterMeta} = concatFragments(block.textFragments);
-      // If this block contains only a soft linebreak then don't discard it
-      let includeEmptyBlock = (text === '\r');
+      let includeEmptyBlock = false;
+      // If the block contains only a soft break then don't discard the block,
+      // but discard the soft break.
+      if (text === SOFT_BREAK_PLACEHOLDER) {
+        includeEmptyBlock = true;
+        text = '';
+      }
       if (block.tagName === 'pre') {
         ({text, characterMeta} = trimLeadingNewline(text, characterMeta));
       } else {
         ({text, characterMeta} = collapseWhiteSpace(text, characterMeta));
       }
+      // Previously we were using a placeholder for soft breaks. Now that we
+      // have collapsed whitespace we can change it back to normal line breaks.
+      // TODO: There could still be one space on either side of the break.
+      text = text.split(SOFT_BREAK_PLACEHOLDER).join('\n');
       // Discard empty blocks (unless otherwise specified).
       if (text.length || includeEmptyBlock) {
         contentBlocks.push(
@@ -221,7 +235,8 @@ class BlockGenerator {
   processInlineElement(element: DOMElement) {
     let tagName = element.nodeName.toLowerCase();
     if (tagName === 'br') {
-      return this.processText('\r');
+      this.processText(SOFT_BREAK_PLACEHOLDER);
+      return;
     }
     let block = this.blockStack.slice(-1)[0];
     let style = block.styleStack.slice(-1)[0];
@@ -242,11 +257,11 @@ class BlockGenerator {
 
   processTextNode(node: DOMNode) {
     let text = node.nodeValue;
-    // This is important because we will use \r as a placeholder.
+    // This is important because we will use \r as a placeholder for a soft break.
     text = text.replace(LINE_BREAKS, '\n');
-    // Replace zero-width space (used as a placeholder in markdown) with a
-    // soft linebreak.
-    text = text.split('\u200B').join('\r');
+    // Replace zero-width space (we use it as a placeholder in markdown) with a
+    // soft break.
+    text = text.split(ZERO_WIDTH_SPACE).join(SOFT_BREAK_PLACEHOLDER);
     this.processText(text);
   }
 

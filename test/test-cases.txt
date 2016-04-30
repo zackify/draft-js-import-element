@@ -2,9 +2,13 @@
 {"entityMap":{},"blocks":[{"key":"33nh8","text":"a","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
 <p>a</p>
 
+# Whitespace collapse
+{"entityMap":{},"blocks":[{"key":"33nh9","text":"a b","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
+<p>a &#9;&#10; b</p>
+
 # Line breaks
-{"entityMap":{},"blocks":[{"key":"4goen","text":"a\rb","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
-<p>a<br>b</p>
+{"entityMap":{},"blocks":[{"key":"4goen","text":"a\nb\nc","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
+<p>a<br>b<br>c</p>
 
 # Single inline style
 {"entityMap":{},"blocks":[{"key":"99n0j","text":"asdf","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":3,"length":1,"style":"BOLD"}],"entityRanges":[]}]}
