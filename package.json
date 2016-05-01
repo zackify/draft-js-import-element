@@ -47,6 +47,16 @@
     "import-element"
   ],
   "author": "sstur@me.com",
+  "contributors": [
+    {
+      "name": "Per Nilsson",
+      "url": "https://github.com/coopy"
+    },
+    {
+      "name": "Simon Sturmer",
+      "url": "https://github.com/sstur"
+    }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/sstur/draft-js-import-element/issues"
