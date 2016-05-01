@@ -21,7 +21,8 @@ type DOMNode = SyntheticNode | Node;
 type DOMElement = SyntheticElement | Element;
 
 type CharacterMetaSeq = IndexedSeq<CharacterMetadata>;
-type StyleSet = Set;
+type Style = string;
+type StyleSet = Set<Style>;
 
 type TextFragment = {
   text: string;
@@ -40,6 +41,12 @@ type ParsedBlock = {
   styleStack: Array<StyleSet>;
   entityStack: Array<?Entity>;
   depth: number;
+};
+
+type ElementStyles = {[tagName: string]: Style};
+
+type Options = {
+  elementStyles?: ElementStyles;
 };
 
 const NO_STYLE = OrderedSet();
@@ -113,10 +120,10 @@ class BlockGenerator {
   blockStack: Array<ParsedBlock>;
   blockList: Array<ParsedBlock>;
   depth: number;
-  options: Object;
+  options: Options;
 
-  constructor(options) {
-    this.options = options || {};
+  constructor(options: Options = {}) {
+    this.options = options;
     // This represents the hierarchy as we traverse nested elements; for
     // example [body, ul, li] where we must know li's parent type (ul or ol).
     this.blockStack = [];
@@ -359,7 +366,7 @@ function concatFragments(fragments: Array<TextFragment>): TextFragment {
 }
 
 
-function addStyleFromTagName(styleSet: StyleSet, tagName: string, elementStyles?: Object): StyleSet {
+function addStyleFromTagName(styleSet: StyleSet, tagName: string, elementStyles?: ElementStyles): StyleSet {
   switch (tagName) {
     case 'b':
     case 'strong': {
@@ -379,7 +386,7 @@ function addStyleFromTagName(styleSet: StyleSet, tagName: string, elementStyles?
       return styleSet.add(INLINE_STYLE.STRIKETHROUGH);
     }
     default: {
-      // User can provide custom styles
+      // Allow custom styles to be provided.
       if (elementStyles && elementStyles[tagName]) {
         return styleSet.add(elementStyles[tagName]);
       }
@@ -389,7 +396,7 @@ function addStyleFromTagName(styleSet: StyleSet, tagName: string, elementStyles?
   }
 }
 
-export default function stateFromElement(element: DOMElement, options?: Object): ContentState {
+export default function stateFromElement(element: DOMElement, options?: Options): ContentState {
   let blocks = new BlockGenerator(options).process(element);
   return ContentState.createFromBlockArray(blocks);
 }
