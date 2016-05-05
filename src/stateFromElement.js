@@ -1,5 +1,6 @@
 /* @flow */
 
+import replaceTextWithMeta from './lib/replaceTextWithMeta';
 import {
   CharacterMetadata,
   ContentBlock,
@@ -152,7 +153,6 @@ class BlockGenerator {
       }
       // Previously we were using a placeholder for soft breaks. Now that we
       // have collapsed whitespace we can change it back to normal line breaks.
-      // TODO: There could still be one space on either side of the break.
       text = text.split(SOFT_BREAK_PLACEHOLDER).join('\n');
       // Discard empty blocks (unless otherwise specified).
       if (text.length || includeEmptyBlock) {
@@ -270,6 +270,8 @@ class BlockGenerator {
     text = text.replace(LINE_BREAKS, '\n');
     // Replace zero-width space (we use it as a placeholder in markdown) with a
     // soft break.
+    // TODO: The import-markdown package should correctly turn breaks into <br>
+    // elements so we don't need to include this hack.
     text = text.split(ZERO_WIDTH_SPACE).join(SOFT_BREAK_PLACEHOLDER);
     this.processText(text);
   }
@@ -340,6 +342,17 @@ function collapseWhiteSpace(text: string, characterMeta: CharacterMetaSeq): Text
         .concat(characterMeta.slice(i + 1));
     }
   }
+  // There could still be one space on either side of a softbreak.
+  ({text, characterMeta} = replaceTextWithMeta(
+    {text, characterMeta},
+    SOFT_BREAK_PLACEHOLDER + ' ',
+    SOFT_BREAK_PLACEHOLDER,
+  ));
+  ({text, characterMeta} = replaceTextWithMeta(
+    {text, characterMeta},
+    ' ' + SOFT_BREAK_PLACEHOLDER,
+    SOFT_BREAK_PLACEHOLDER,
+  ));
   return {text, characterMeta};
 }
 

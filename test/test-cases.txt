@@ -3,12 +3,20 @@
 <p>a</p>
 
 # Whitespace collapse
-{"entityMap":{},"blocks":[{"key":"33nh9","text":"a b","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
+{"entityMap":{},"blocks":[{"key":"d7bpe","text":"a b","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
 <p>a &#9;&#10; b</p>
 
 # Line breaks
 {"entityMap":{},"blocks":[{"key":"4goen","text":"a\nb\nc","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
 <p>a<br>b<br>c</p>
+
+# Line breaks
+{"entityMap":{},"blocks":[{"key":"608i2","text":"a\nb","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
+<p>a<br>&#10;b</p>
+
+# Line breaks with extra space
+{"entityMap":{},"blocks":[{"key":"7bg8u","text":"a\nb","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
+<p>a &#10; <br> &#10; b</p>
 
 # Single inline style
 {"entityMap":{},"blocks":[{"key":"99n0j","text":"asdf","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":3,"length":1,"style":"BOLD"}],"entityRanges":[]}]}
