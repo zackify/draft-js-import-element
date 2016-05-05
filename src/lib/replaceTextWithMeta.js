@@ -1,20 +1,17 @@
 /* @flow */
 
-import type {CharacterMetadata} from 'draft-js';
 import type {IndexedSeq} from 'immutable';
 
-type CharacterMetaSeq = IndexedSeq<CharacterMetadata>;
-
-type TextFragment = {
+type TextFragment<T> = {
   text: string;
-  characterMeta: CharacterMetaSeq;
+  characterMeta: IndexedSeq<T>;
 };
 
-export default function replaceTextWithMeta(
-  subject: TextFragment,
+export default function replaceTextWithMeta<T>(
+  subject: TextFragment<T>,
   searchText: string,
   replaceText: string,
-): TextFragment {
+): TextFragment<T> {
   let {text, characterMeta} = subject;
   let searchTextLength = searchText.length;
   let replaceTextLength = replaceText.length;
@@ -44,7 +41,7 @@ export default function replaceTextWithMeta(
   return {text: resultTextParts.join(''), characterMeta: resultCharMeta};
 }
 
-function repeatSeq(seq: IndexedSeq<CharacterMetadata>, count: number): IndexedSeq<CharacterMetadata> {
+function repeatSeq<T>(seq: IndexedSeq<T>, count: number): IndexedSeq<T> {
   let result = seq.slice(0, 0);
   while (count-- > 0) {
     result = result.concat(seq);

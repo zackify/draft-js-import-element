@@ -2,12 +2,11 @@
 const {describe, it} = global;
 import expect from 'expect';
 import replaceTextWithMeta from '../replaceTextWithMeta';
-import {Seq, Set} from 'immutable';
-import {CharacterMetadata} from 'draft-js';
+import {Seq} from 'immutable';
 
 describe('replaceTextWithMeta', () => {
-  let none = getMeta('none');
-  let bold = getMeta('bold');
+  let none = 'NONE';
+  let bold = 'BOLD';
 
   it('should handle empty source', () => {
     let result = replaceTextWithMeta(
@@ -50,11 +49,3 @@ describe('replaceTextWithMeta', () => {
   });
 
 });
-
-
-function getMeta(...args) {
-  return CharacterMetadata.create({
-    style: Set.of(...args),
-    entity: null,
-  });
-}
