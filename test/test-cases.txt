@@ -30,6 +30,10 @@
 {"entityMap":{},"blocks":[{"key":"9nc73","text":"BoldItalic","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":0,"length":4,"style":"ITALIC"},{"offset":4,"length":6,"style":"BOLD"}],"entityRanges":[]}]}
 <p><em>Bold</em><strong>Italic</strong></p>
 
+# Blockquote
+{"entityMap":{},"blocks":[{"key":"8r91a","text":"test","type":"blockquote","depth":0,"inlineStyleRanges":[],"entityRanges":[]}]}
+<blockquote>test</blockquote>
+
 # Image Entity
 {"entityMap":{"0":{"type":"IMAGE","mutability":"MUTABLE","data":{"src":"a.jpg", "alt": "a"}}},"blocks":[{"key":"8r91a","text":"~","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[{"offset":0,"length":1,"key":0}]}]}
 <p><img src="a.jpg" alt="a"/></p>
