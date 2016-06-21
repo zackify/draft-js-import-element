@@ -75,14 +75,17 @@ const ELEM_ATTR_MAP = {
 };
 
 const getEntityData = (tagName: string, element: DOMElement) => {
-  let data = {};
+  const data = {};
   if (ELEM_ATTR_MAP.hasOwnProperty(tagName)) {
-    let attrMap = ELEM_ATTR_MAP[tagName];
-    for (let attr of Object.keys(attrMap)) {
-      let dataKey = attrMap[attr];
-      let dataValue = element.getAttribute(attr);
-      if (dataValue != null) {
-        data[dataKey] = dataValue;
+    const attrMap = ELEM_ATTR_MAP[tagName];
+    for (let i = 0; i < element.attributes.length; i++) {
+      const attr = element.attributes[i];
+      let dataKey = attrMap[attr.name] || attr.name.match(/^data-([a-z0-9-]+)$/);
+      if (Array.isArray(dataKey)) {
+        dataKey = dataKey[0];
+      }
+      if (dataKey && attr.value !== null) {
+        data[dataKey] = attr.value;
       }
     }
   }
