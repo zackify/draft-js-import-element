@@ -67,6 +67,7 @@ const LINE_BREAKS = /(\r\n|\r|\n)/g;
 // we put it there as a placeholder.
 const SOFT_BREAK_PLACEHOLDER = '\r';
 const ZERO_WIDTH_SPACE = '\u200B';
+const DATA_ATTRIBUTE = /^data-([a-z0-9-]+)$/;
 
 // Map element attributes to entity data.
 const ELEM_ATTR_MAP = {
@@ -79,13 +80,14 @@ const getEntityData = (tagName: string, element: DOMElement) => {
   if (ELEM_ATTR_MAP.hasOwnProperty(tagName)) {
     const attrMap = ELEM_ATTR_MAP[tagName];
     for (let i = 0; i < element.attributes.length; i++) {
-      const attr = element.attributes[i];
-      let dataKey = attrMap[attr.name] || attr.name.match(/^data-([a-z0-9-]+)$/);
-      if (Array.isArray(dataKey)) {
-        dataKey = dataKey[0];
-      }
-      if (dataKey && attr.value !== null) {
-        data[dataKey] = attr.value;
+      const {name, value} = element.attributes[i];
+      if (value != null) {
+        const newName = attrMap[name];
+        if (newName) {
+          data[newName] = value;
+        } else if (DATA_ATTRIBUTE.test(name)) {
+          data[name] = value;
+        }
       }
     }
   }
