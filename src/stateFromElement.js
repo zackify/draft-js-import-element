@@ -82,8 +82,8 @@ const getEntityData = (tagName: string, element: DOMElement) => {
     for (let i = 0; i < element.attributes.length; i++) {
       const {name, value} = element.attributes[i];
       if (value != null) {
-        const newName = attrMap[name];
-        if (newName) {
+        if (attrMap.hasOwnProperty(name)) {
+          const newName = attrMap[name];
           data[newName] = value;
         } else if (DATA_ATTRIBUTE.test(name)) {
           data[name] = value;
